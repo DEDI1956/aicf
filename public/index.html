@@ -221,9 +221,10 @@
 
       footer {
         margin-top: 2.5rem;
+        margin-bottom: 60px; /* Supaya tidak ketimpa tombol admin */
         text-align: center;
-        font-size: .97rem;
-        color: #ffe082;
+        font-size: .99rem;
+        color: #FFD600;
         padding-bottom: 1.3rem;
         background: var(--footer-bg);
         border-radius: 0 0 16px 16px;
@@ -231,12 +232,66 @@
         min-width: 340px;
         max-width: 420px;
         width: 100%;
+        font-family: 'Segoe UI', Roboto, Arial, sans-serif;
       }
-      @media (max-width: 480px) {
-        .header, .chat-container, footer {
-          min-width: unset;
-          max-width: 100vw;
-        }
+      .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        line-height: 1.7;
+        padding-top: 12px;
+        padding-bottom: 8px;
+      }
+      .footer-content .maker {
+        font-weight: bold;
+        letter-spacing: 0.5px;
+      }
+      .footer-content .maker small {
+        font-weight: normal;
+        color: #ffe082;
+      }
+      .footer-content .contacts {
+        font-size: 0.98em;
+        color: #ffe082;
+        margin-top: 2px;
+      }
+      .footer-content .contacts span {
+        margin: 0 6px;
+      }
+
+      /* Tombol kontak admin melayang */
+      .contact-admin-fab {
+        position: fixed;
+        right: 22px;
+        bottom: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+        z-index: 100;
+      }
+      .contact-admin-fab a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        box-shadow: 0 2px 12px 0 #1119;
+        background: #181818;
+        transition: transform 0.13s, box-shadow 0.13s;
+        border: 2.5px solid transparent;
+      }
+      .contact-admin-fab a.wa { border-color: #25D366; }
+      .contact-admin-fab a.tg { border-color: #229ED9; }
+      .contact-admin-fab a.fb { border-color: #1877F3; }
+      .contact-admin-fab a:hover { transform: scale(1.12); box-shadow: 0 6px 20px #FFD60066; }
+      .contact-admin-fab svg { display: block; }
+      @media (max-width: 600px) {
+        .contact-admin-fab { right: 10px; bottom: 10px; }
+        .contact-admin-fab a { width: 48px; height: 48px; }
+        .contact-admin-fab svg { width: 24px; height: 24px; }
+        footer { min-width: unset; max-width: 100vw; }
       }
     </style>
   </head>
@@ -283,8 +338,29 @@
       </div>
     </div>
     <footer>
-      <p><b>AI DIANA</b> &copy; 2025 — Powered by Cloudflare Workers AI</p>
+      <div class="footer-content">
+        <div class="maker">Dibuat dengan ❤️ oleh <span style="color:#FFC400;">Dedi (CEO Sezuki)</span></div>
+        <div class="contacts">
+          WhatsApp: <a href="https://wa.me/6282173914145" target="_blank" style="color:#25D366;">0821-7391-4145</a>
+          <span>|</span>
+          Telegram: <a href="https://t.me/nina_storevip" target="_blank" style="color:#229ED9;">@nina_storevip</a>
+          <span>|</span>
+          Facebook: <a href="https://facebook.com/Dedi%20ceo%20sezuki" target="_blank" style="color:#1877F3;">Dedi ceo sezuki</a>
+        </div>
+      </div>
     </footer>
+    <!-- Tombol kontak admin melayang -->
+    <div class="contact-admin-fab">
+      <a href="https://wa.me/6282173914145" target="_blank" title="Hubungi via WhatsApp" class="wa">
+        <svg width="28" height="28" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#25D366"/><path d="M23.9 20.3c-.3-.2-1.7-.8-2-1s-.5-.2-.7.1c-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-1.7-.7-3.1-2.3-3.9-3.9-.1-.3 0-.4.1-.6s.3-.4.5-.6c.2-.3.2-.5.1-.7s-.7-1.7-1-2.3c-.2-.4-.5-.4-.7-.4-.2 0-.5 0-.8 0-.4 0-.7.4-.8.8-.5 1.4.1 3.2 1.7 5.1 1.6 2 3.7 3.2 5.2 3.2.6 0 1.2-.2 1.4-.4.2-.2.4-.4.5-.6.1-.2.1-.4 0-.6zm-7.1-12.6C10.2 7.7 7.2 11.1 7.2 15.2c0 2 .8 3.9 2.2 5.3l-1.4 4.2 4.4-1.4c1.3.7 2.7 1.1 4.2 1.1 4.1 0 7.5-3 7.5-6.7 0-3.8-3.4-6.8-7.5-6.8z" fill="#fff"/></svg>
+      </a>
+      <a href="https://t.me/nina_storevip" target="_blank" title="Hubungi via Telegram" class="tg">
+        <svg width="28" height="28" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#229ED9"/><path d="M24.4 9.6l-2.6 12.3c-.2.9-.8 1.1-1.6.7l-4.5-3.3-2.2 2.1c-.3.3-.5.5-1.1.5l.4-5.3 9.7-8.7c.4-.3-.1-.4-.6-.2L9.7 15.2l-5.1-1.6c-1-.3-1-1 0-1.3l18.2-7c.8-.3 1.5.2 1.2 1.3z" fill="#fff"/></svg>
+      </a>
+      <a href="https://facebook.com/Dedi%20ceo%20sezuki" target="_blank" title="Hubungi via Facebook" class="fb">
+        <svg width="28" height="28" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#1877F3"/><path d="M21.9 17.1l.5-3.3h-3v-2c0-.9.3-1.7 1.8-1.7h1.3V7.2S20.7 7 19.5 7c-2.3 0-3.7 1.4-3.7 4v2.8h-2.5v3.3h2.5V25h3.1v-7.9h2.1z" fill="#fff"/></svg>
+      </a>
+    </div>
     <script src="chat.js"></script>
     <script>
       // Tombol copy di setiap bubble AI

@@ -113,6 +113,9 @@
         display: inline-block;
         margin-bottom: 0.1rem;
         border: 2.5px solid transparent;
+        position: relative;
+        /* ruang untuk tombol copy */
+        padding-right: 2.4rem;
       }
       .bubble.user {
         align-self: flex-end;
@@ -131,6 +134,27 @@
         border-bottom-left-radius: 0.4rem;
         margin-right: auto;
         margin-left: 0.2rem;
+      }
+
+      /* Tombol copy di bubble */
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 2px 2px 2px 2px;
+        border-radius: 6px;
+        transition: background 0.15s;
+        color: #FFD600;
+        z-index: 3;
+        font-size: 1rem;
+      }
+      .copy-btn:hover {
+        background: #fffde7;
+        color: #333;
       }
 
       .typing-indicator {
@@ -240,6 +264,9 @@
       <div id="chat-messages" class="chat-messages">
         <div class="bubble ai">
           Halo, saya <b>AI DIANA</b>! Siap membantu Anda. Silakan tanya apa saja.
+          <button class="copy-btn" title="Copy">
+            <svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="9" height="10" rx="2" fill="#FFD600" stroke="#333" stroke-width="1.3"/><rect x="7" y="3" width="9" height="10" rx="2" fill="none" stroke="#FFD600" stroke-width="1.5"/></svg>
+          </button>
         </div>
       </div>
       <div class="typing-indicator" id="typing-indicator">
@@ -259,5 +286,25 @@
       <p><b>AI DIANA</b> &copy; 2025 — Powered by Cloudflare Workers AI</p>
     </footer>
     <script src="chat.js"></script>
+    <script>
+      // Tombol copy di setiap bubble AI
+      function initCopyButtons() {
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+          btn.onclick = function(e) {
+            e.stopPropagation();
+            const bubble = btn.closest('.bubble');
+            let text = bubble.innerText.replace("Copy", "").replace("Copied!","");
+            navigator.clipboard.writeText(text.trim());
+            btn.innerHTML = "Copied!";
+            setTimeout(()=>{btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="9" height="10" rx="2" fill="#FFD600" stroke="#333" stroke-width="1.3"/><rect x="7" y="3" width="9" height="10" rx="2" fill="none" stroke="#FFD600" stroke-width="1.5"/></svg>` }, 1300)
+          }
+        });
+      }
+      // Panggil ulang setiap kali ada pesan baru
+      const observer = new MutationObserver(initCopyButtons);
+      observer.observe(document.getElementById('chat-messages'), {childList: true, subtree: true});
+      // Panggil awal
+      initCopyButtons();
+    </script>
   </body>
 </html>

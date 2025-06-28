@@ -16,10 +16,8 @@
         --bubble-ai-border: #fffde7;
         --text-main: #fffde7;
         --text-light: #bdbdbd;
-        --header-shadow: 0 4px 24px 0 rgba(255, 214, 0, 0.25);
         --footer-bg: #181818;
       }
-
       body {
         background: #111;
         min-height: 100vh;
@@ -31,22 +29,20 @@
         align-items: center;
         justify-content: flex-start;
       }
-
       .robot-hero {
         display: flex;
         justify-content: center;
         align-items: center;
         margin-top: 2.2rem;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.4rem;
       }
       .robot-hero .robot-img {
         width: 160px;
         height: auto;
       }
-
       .main-title {
         text-align: center;
-        margin-bottom: 1.1rem;
+        margin-bottom: 0.3rem;
       }
       .main-title h1 {
         font-size: 2.5rem;
@@ -60,22 +56,19 @@
         font-size: 1.07rem;
         color: #fffde7cc;
         margin-top: 0.2rem;
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.7rem;
         letter-spacing: 0.5px;
       }
-
-      .socmed-fullrow {
+      .socmed-row-center {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
+        gap: 2.4rem;
+        margin-bottom: 1.1rem;
+        margin-top: 0.2rem;
         width: 100%;
-        max-width: 420px;
-        margin: 0 auto 1.1rem auto;
-        gap: 0.5rem;
-        padding: 0.5rem 1.1rem 0.5rem 1.1rem;
-        box-sizing: border-box;
       }
-      .socmed-fullrow a {
+      .socmed-row-center a {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -83,18 +76,17 @@
         background: #181818;
         box-shadow: 0 1px 8px #1115;
         border: 2.5px solid transparent;
-        width: 56px;
-        height: 56px;
+        width: 64px;
+        height: 64px;
         transition: transform 0.13s, box-shadow 0.13s, border-color 0.13s;
         padding: 0;
         text-decoration: none;
       }
-      .socmed-fullrow a.wa { border-color: #25D366; }
-      .socmed-fullrow a.tg { border-color: #229ED9; }
-      .socmed-fullrow a.fb { border-color: #1877F3; }
-      .socmed-fullrow a:hover { transform: scale(1.11); box-shadow: 0 6px 18px #FFD60066; }
-      .socmed-fullrow svg { width: 34px; height: 34px; display: block; }
-
+      .socmed-row-center a.wa { border-color: #25D366; }
+      .socmed-row-center a.tg { border-color: #229ED9; }
+      .socmed-row-center a.fb { border-color: #1877F3; }
+      .socmed-row-center a:hover { transform: scale(1.13); box-shadow: 0 6px 18px #FFD60066; }
+      .socmed-row-center svg { width: 38px; height: 38px; display: block; }
       .chat-container {
         background: var(--chat-bg);
         border-radius: 18px;
@@ -148,14 +140,12 @@
         margin-right: auto;
         margin-left: 0.2rem;
       }
-
       .ai-label {
         font-weight: bold;
         color: #FFD600;
         margin-right: 0.7em;
         letter-spacing: 0.5px;
       }
-
       .copy-btn {
         position: absolute;
         top: 8px;
@@ -175,7 +165,6 @@
         background: #fffde7;
         color: #333;
       }
-
       .typing-indicator {
         font-style: italic;
         color: var(--text-light);
@@ -188,7 +177,6 @@
       .typing-indicator.visible {
         display: block;
       }
-
       .message-input {
         display: flex;
         padding: 0.7rem 1rem 0.1rem 1rem;
@@ -237,7 +225,6 @@
         color: #333;
         cursor: not-allowed;
       }
-
       footer {
         margin-top: 1.7rem;
         margin-bottom: 59px;
@@ -278,14 +265,13 @@
       .footer-content .contacts span {
         margin: 0 6px;
       }
-
       @media (max-width: 600px) {
         .main-title h1 { font-size: 1.6rem; }
         .robot-hero .robot-img { width:120px; }
+        .socmed-row-center { gap:1rem;}
+        .socmed-row-center a { width: 42px; height: 42px;}
+        .socmed-row-center svg { width:24px; height:24px;}
         .chat-container { min-width: unset; max-width: 100vw; }
-        .socmed-fullrow { max-width: 100vw; padding-left:0.1rem; padding-right:0.1rem;}
-        .socmed-fullrow a { width: 40px; height: 40px;}
-        .socmed-fullrow svg { width:22px; height:22px;}
         footer { min-width: unset; max-width: 100vw; }
       }
     </style>
@@ -303,8 +289,11 @@
         <text x="80" y="146" text-anchor="middle" font-size="10" fill="#333">Pesan Anda</text>
       </svg>
     </div>
-    <!-- BARIS LAMBANG SOSMED FULL SATU BARIS -->
-    <div class="socmed-fullrow">
+    <div class="main-title">
+      <h1>AI DIANA</h1>
+      <div class="sub">Asisten Virtual Modern</div>
+    </div>
+    <div class="socmed-row-center">
       <a href="https://wa.me/6282173914145" target="_blank" title="WhatsApp Admin" class="wa">
         <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#25D366"/><path d="M23.9 20.3c-.3-.2-1.7-.8-2-1s-.5-.2-.7.1c-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-1.7-.7-3.1-2.3-3.9-3.9-.1-.3 0-.4.1-.6s.3-.4.5-.6c.2-.3.2-.5.1-.7s-.7-1.7-1-2.3c-.2-.4-.5-.4-.7-.4-.2 0-.5 0-.8 0-.4 0-.7.4-.8.8-.5 1.4.1 3.2 1.7 5.1 1.6 2 3.7 3.2 5.2 3.2.6 0 1.2-.2 1.4-.4.2-.2.4-.4.5-.6.1-.2.1-.4 0-.6zm-7.1-12.6C10.2 7.7 7.2 11.1 7.2 15.2c0 2 .8 3.9 2.2 5.3l-1.4 4.2 4.4-1.4c1.3.7 2.7 1.1 4.2 1.1 4.1 0 7.5-3 7.5-6.7 0-3.8-3.4-6.8-7.5-6.8z" fill="#fff"/></svg>
       </a>
@@ -314,10 +303,6 @@
       <a href="https://facebook.com/Dedi%20ceo%20sezuki" target="_blank" title="Facebook Admin" class="fb">
         <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#1877F3"/><path d="M21.9 17.1l.5-3.3h-3v-2c0-.9.3-1.7 1.8-1.7h1.3V7.2S20.7 7 19.5 7c-2.3 0-3.7 1.4-3.7 4v2.8h-2.5v3.3h2.5V25h3.1v-7.9h2.1z" fill="#fff"/></svg>
       </a>
-    </div>
-    <div class="main-title">
-      <h1>AI DIANA</h1>
-      <div class="sub">Asisten Virtual Modern</div>
     </div>
     <div class="chat-container">
       <div id="chat-messages" class="chat-messages"></div>
@@ -350,25 +335,44 @@
       </div>
     </footer>
     <script>
-      // Tambahkan label AI otomatis setiap balasan AI baru
+      // Chat logic langsung di HTML
       const chatMessages = document.getElementById('chat-messages');
-      const observerAI = new MutationObserver(function(muts){
-        muts.forEach(function(mut){
-          mut.addedNodes && Array.from(mut.addedNodes).forEach(function(node){
-            if(node.classList && node.classList.contains('bubble') && node.classList.contains('ai')) {
-              if(!node.querySelector('.ai-label')) {
-                const label = document.createElement('span');
-                label.className = 'ai-label';
-                label.textContent = 'DIANA AI:';
-                node.insertBefore(label, node.firstChild);
-              }
-            }
-          });
-        });
+      const userInput = document.getElementById('user-input');
+      const sendButton = document.getElementById('send-button');
+      // Welcome on load
+      window.addEventListener('DOMContentLoaded', function() {
+        // Kosongkan chat-messages, lalu tambahkan welcome AI
+        chatMessages.innerHTML = '';
+        setTimeout(() => {
+          createBubble("Halo! Ada yang bisa DIANA AI bantu hari ini?", 'ai');
+        }, 500);
       });
-      observerAI.observe(chatMessages, {childList:true});
-
-      // Tombol copy di setiap bubble AI
+      function createBubble(text, who = 'user') {
+        const div = document.createElement('div');
+        div.className = 'bubble ' + who;
+        div.innerHTML = (who === 'ai'
+          ? '<span class="ai-label">DIANA AI:</span> ' + text + `<button class="copy-btn" title="Copy"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="9" height="10" rx="2" fill="#FFD600" stroke="#333" stroke-width="1.3"/><rect x="7" y="3" width="9" height="10" rx="2" fill="none" stroke="#FFD600" stroke-width="1.5"/></svg></button>`
+          : text);
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      sendButton.onclick = sendMessage;
+      userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+      function sendMessage() {
+        const msg = userInput.value.trim();
+        if (!msg) return;
+        createBubble(msg, 'user');
+        userInput.value = '';
+        setTimeout(() => {
+          createBubble('Ini balasan dari <b>DIANA AI</b> untuk: <i>' + msg + '</i>', 'ai');
+        }, 900);
+      }
+      // Copy button
       function initCopyButtons() {
         document.querySelectorAll('.copy-btn').forEach(btn => {
           btn.onclick = function(e) {
@@ -381,12 +385,10 @@
           }
         });
       }
-      // Panggil ulang setiap kali ada pesan baru
+      // Monitor bubble baru
       const observer = new MutationObserver(initCopyButtons);
       observer.observe(document.getElementById('chat-messages'), {childList: true, subtree: true});
-      // Panggil awal
       initCopyButtons();
     </script>
-    <script src="chat.js"></script>
   </body>
 </html>

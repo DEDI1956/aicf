@@ -16,7 +16,7 @@
         --bubble-ai-border: #fffde7;
         --text-main: #fffde7;
         --text-light: #bdbdbd;
-        --header-shadow: 0 0px 24px 0 rgba(255, 214, 0, 0.25);
+        --header-shadow: 0 4px 24px 0 rgba(255, 214, 0, 0.25);
         --footer-bg: #181818;
       }
 
@@ -32,55 +32,36 @@
         justify-content: flex-start;
       }
 
-      .header {
-        background: var(--primary-yellow);
-        color: #212121;
-        box-shadow: var(--header-shadow);
-        padding: 1.1rem 1rem 1.2rem 1rem;
-        margin-top: 1.1rem;
-        border-radius: 22px 22px 13px 13px;
-        position: relative;
-        text-align: center;
-        min-width: 340px;
-        max-width: 420px;
-        width: 100%;
-        z-index: 3;
-      }
-      .header h1 {
-        font-size: 2.2rem;
-        font-weight: 900;
-        margin: 0 0 0.18rem 0;
-        letter-spacing: 2px;
-        text-shadow: 1px 2px 8px rgba(0,0,0,0.10);
-      }
-      .header .sub {
-        font-size: 1.01rem;
-        color: #212121bb;
-        font-weight: 400;
-        margin-bottom: 0.5rem;
-      }
-      .header-divider {
-        margin: 0 auto;
-        margin-top: 0.9rem;
-        background: #fffde7;
-        border-radius: 7px;
-        width: 76%;
-        height: 9px;
-        box-shadow: 0 2px 12px 0 #bdb76b66, 0 0 0 2.5px #FFD600;
-      }
-
       .robot-hero {
         display: flex;
         justify-content: center;
-        align-items: flex-end;
-        margin-top: -22px;
-        margin-bottom: 14px;
-        z-index: 2;
-        position: relative;
+        align-items: center;
+        margin-top: 2.2rem;
+        margin-bottom: 0.2rem;
       }
       .robot-hero .robot-img {
         width: 160px;
         height: auto;
+      }
+
+      .main-title {
+        text-align: center;
+        margin-bottom: 1.1rem;
+      }
+      .main-title h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: 2.5px;
+        color: #FFD600;
+        margin: 0;
+        text-shadow: 1px 2px 8px rgba(0,0,0,0.10);
+      }
+      .main-title .sub {
+        font-size: 1.07rem;
+        color: #fffde7cc;
+        margin-top: 0.2rem;
+        margin-bottom: 0.8rem;
+        letter-spacing: 0.5px;
       }
 
       .chat-container {
@@ -287,24 +268,18 @@
       .contact-admin-fab a:hover { transform: scale(1.12); box-shadow: 0 6px 20px #FFD60066; }
       .contact-admin-fab svg { display: block; }
       @media (max-width: 600px) {
-        .header { min-width: unset; max-width: 100vw; }
+        .main-title h1 { font-size: 1.6rem; }
+        .robot-hero .robot-img { width:120px; }
         .chat-container { min-width: unset; max-width: 100vw; }
         .contact-admin-fab { right: 13px; bottom: 13px; gap: 12px;}
         .contact-admin-fab a { width: 46px; height: 46px; }
         .contact-admin-fab svg { width: 23px; height: 23px; }
         footer { min-width: unset; max-width: 100vw; }
-        .robot-hero .robot-img { width:120px; }
       }
     </style>
   </head>
   <body>
-    <div class="header">
-      <h1>AI DIANA</h1>
-      <div class="sub">Asisten Virtual Modern</div>
-      <div class="header-divider"></div>
-    </div>
     <div class="robot-hero">
-      <!-- SVG robot lebih besar -->
       <svg class="robot-img" viewBox="0 0 160 160" fill="none">
         <ellipse cx="80" cy="80" rx="70" ry="70" fill="#FFD600"/>
         <ellipse cx="80" cy="108" rx="48" ry="22" fill="#FFFDE7" opacity="0.5"/>
@@ -312,10 +287,13 @@
         <ellipse cx="65" cy="91" rx="10" ry="12" fill="#FFD600"/>
         <ellipse cx="95" cy="91" rx="10" ry="12" fill="#FFD600"/>
         <rect x="76" y="113" width="8" height="9" rx="4" fill="#FFD600"/>
-        <!-- Kotak pesan -->
         <rect x="58" y="132" width="44" height="20" rx="6" fill="#FFFDE7" stroke="#FFD600" stroke-width="3"/>
         <text x="80" y="146" text-anchor="middle" font-size="10" fill="#333">Pesan Anda</text>
       </svg>
+    </div>
+    <div class="main-title">
+      <h1>AI DIANA</h1>
+      <div class="sub">Asisten Virtual Modern</div>
     </div>
     <div class="chat-container">
       <div id="chat-messages" class="chat-messages">

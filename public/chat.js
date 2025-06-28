@@ -1,7 +1,6 @@
 /**
- * LLM Chat App Frontend
- *
- * Handles the chat UI interactions and communication with the backend API.
+ * AI DIANA Chat App Frontend
+ * Mendukung: bubble modern, tombol copy, streaming, auto-scroll, dll.
  */
 
 // DOM elements
@@ -13,9 +12,9 @@ const typingIndicator = document.getElementById("typing-indicator");
 // Chat state
 let chatHistory = [
   {
-    role: "assistant",
+    role: "ai",
     content:
-      "Hello! I'm an LLM chat app powered by Cloudflare Workers AI. How can I help you today?",
+      "Halo, saya <b>AI DIANA</b>! Siap membantu Anda. Silakan tanya apa saja.",
   },
 ];
 let isProcessing = false;
@@ -26,7 +25,7 @@ userInput.addEventListener("input", function () {
   this.style.height = this.scrollHeight + "px";
 });
 
-// Send message on Enter (without Shift)
+// Send message on Enter (tanpa Shift)
 userInput.addEventListener("keydown", function (e) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
@@ -38,105 +37,110 @@ userInput.addEventListener("keydown", function (e) {
 sendButton.addEventListener("click", sendMessage);
 
 /**
- * Sends a message to the chat API and processes the response
+ * Menambah pesan ke chat (bubble user/ai)
+ */
+function addMessageToChat(role, content) {
+  const messageEl = document.createElement("div");
+  messageEl.className = `bubble ${role}`;
+  messageEl.innerHTML = content;
+  if (role === "ai") {
+    // Tambah tombol copy
+    messageEl.innerHTML +=
+      '<button class="copy-btn" title="Copy"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="9" height="10" rx="2" fill="#FFD600" stroke="#333" stroke-width="1.3"/><rect x="7" y="3" width="9" height="10" rx="2" fill="none" stroke="#FFD600" stroke-width="1.5"/></svg></button>';
+  }
+  chatMessages.appendChild(messageEl);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+/**
+ * Kirim pesan ke API dan proses streaming balasan AI
  */
 async function sendMessage() {
   const message = userInput.value.trim();
 
-  // Don't send empty messages
+  // Jangan kirim pesan kosong/lagi proses
   if (message === "" || isProcessing) return;
 
-  // Disable input while processing
+  // Disable input saat memproses
   isProcessing = true;
   userInput.disabled = true;
   sendButton.disabled = true;
 
-  // Add user message to chat
+  // Tambahkan pesan user ke chat
   addMessageToChat("user", message);
 
-  // Clear input
+  // Kosongkan input
   userInput.value = "";
   userInput.style.height = "auto";
 
-  // Show typing indicator
+  // Tampilkan typing indicator
   typingIndicator.classList.add("visible");
 
-  // Add message to history
+  // Tambahkan ke history
   chatHistory.push({ role: "user", content: message });
 
   try {
-    // Create new assistant response element
-    const assistantMessageEl = document.createElement("div");
-    assistantMessageEl.className = "message assistant-message";
-    assistantMessageEl.innerHTML = "<p></p>";
-    chatMessages.appendChild(assistantMessageEl);
-
-    // Scroll to bottom
+    // Buat elemen bubble AI kosong untuk streaming
+    const aiMessageEl = document.createElement("div");
+    aiMessageEl.className = "bubble ai";
+    aiMessageEl.innerHTML =
+      '<span id="ai-stream"></span>' +
+      '<button class="copy-btn" title="Copy"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="9" height="10" rx="2" fill="#FFD600" stroke="#333" stroke-width="1.3"/><rect x="7" y="3" width="9" height="10" rx="2" fill="none" stroke="#FFD600" stroke-width="1.5"/></svg></button>';
+    chatMessages.appendChild(aiMessageEl);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    // Send request to API
+    // Kirim request ke API
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        messages: chatHistory,
+        messages: chatHistory.map((x) =>
+          x.role === "ai" ? { role: "assistant", content: stripHTML(x.content) } : { ...x }
+        ),
       }),
     });
 
-    // Handle errors
-    if (!response.ok) {
-      throw new Error("Failed to get response");
-    }
+    if (!response.ok) throw new Error("Gagal mendapatkan balasan dari AI");
 
-    // Process streaming response
+    // Streaming respon
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let responseText = "";
 
     while (true) {
       const { done, value } = await reader.read();
-
-      if (done) {
-        break;
-      }
-
-      // Decode chunk
+      if (done) break;
       const chunk = decoder.decode(value, { stream: true });
 
-      // Process SSE format
+      // Proses streaming JSON per baris
       const lines = chunk.split("\n");
       for (const line of lines) {
         try {
           const jsonData = JSON.parse(line);
           if (jsonData.response) {
-            // Append new content to existing text
             responseText += jsonData.response;
-            assistantMessageEl.querySelector("p").textContent = responseText;
-
-            // Scroll to bottom
+            aiMessageEl.querySelector("#ai-stream").innerHTML = escapeHTML(responseText);
             chatMessages.scrollTop = chatMessages.scrollHeight;
           }
         } catch (e) {
-          console.error("Error parsing JSON:", e);
+          // Lewati error parsing (misal baris kosong)
         }
       }
     }
 
-    // Add completed response to chat history
-    chatHistory.push({ role: "assistant", content: responseText });
-  } catch (error) {
-    console.error("Error:", error);
-    addMessageToChat(
-      "assistant",
-      "Sorry, there was an error processing your request.",
-    );
-  } finally {
-    // Hide typing indicator
-    typingIndicator.classList.remove("visible");
+    // Update bubble jadi final (hapus id #ai-stream)
+    aiMessageEl.innerHTML =
+      escapeHTML(responseText) +
+      '<button class="copy-btn" title="Copy"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="9" height="10" rx="2" fill="#FFD600" stroke="#333" stroke-width="1.3"/><rect x="7" y="3" width="9" height="10" rx="2" fill="none" stroke="#FFD600" stroke-width="1.5"/></svg></button>';
 
-    // Re-enable input
+    // Simpan ke history
+    chatHistory.push({ role: "ai", content: escapeHTML(responseText) });
+  } catch (error) {
+    addMessageToChat("ai", "Maaf, terjadi kesalahan saat memproses permintaan Anda.");
+  } finally {
+    typingIndicator.classList.remove("visible");
     isProcessing = false;
     userInput.disabled = false;
     sendButton.disabled = false;
@@ -145,14 +149,29 @@ async function sendMessage() {
 }
 
 /**
- * Helper function to add message to chat
+ * Escape text supaya HTML tidak dieksekusi (aman)
  */
-function addMessageToChat(role, content) {
-  const messageEl = document.createElement("div");
-  messageEl.className = `message ${role}-message`;
-  messageEl.innerHTML = `<p>${content}</p>`;
-  chatMessages.appendChild(messageEl);
-
-  // Scroll to bottom
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
+
+/**
+ * Hapus tag HTML (untuk history)
+ */
+function stripHTML(html) {
+  var tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+}
+
+/**
+ * Fitur tombol copy di setiap bubble AI
+ * (Sudah otomatis aktif lewat observer di index.html, jadi tidak perlu diulang di sini)
+ */
+
+// Selesai!

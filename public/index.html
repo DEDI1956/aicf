@@ -1,393 +1,340 @@
 <!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI DIANA</title>
-  <style>
-    :root {
-      --primary-yellow: #FFD600;
-      --primary-yellow-dark: #FFC400;
-      --border-color: #333;
-      --chat-bg: #222;
-      --bubble-user: #424242;
-      --bubble-ai: #282828;
-      --bubble-user-border: #FFD600;
-      --bubble-ai-border: #fffde7;
-      --text-main: #fffde7;
-      --text-light: #bdbdbd;
-      --footer-bg: #181818;
-    }
-    body {
-      background: #111;
-      min-height: 100vh;
-      margin: 0;
-      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-    }
-    .robot-hero {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 2.2rem;
-      margin-bottom: 0.4rem;
-    }
-    .robot-hero .robot-img {
-      width: 160px;
-      height: auto;
-    }
-    .main-title {
-      text-align: center;
-      margin-bottom: 0.3rem;
-    }
-    .main-title h1 {
-      font-size: 2.5rem;
-      font-weight: 900;
-      letter-spacing: 2.5px;
-      color: #FFD600;
-      margin: 0;
-      text-shadow: 1px 2px 8px rgba(0,0,0,0.10);
-    }
-    .main-title .sub {
-      font-size: 1.07rem;
-      color: #fffde7cc;
-      margin-top: 0.2rem;
-      margin-bottom: 0.7rem;
-      letter-spacing: 0.5px;
-    }
-    .socmed-row-center {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 2.4rem;
-      margin-bottom: 1.1rem;
-      margin-top: 0.2rem;
-      width: 100%;
-    }
-    .socmed-row-center a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: #181818;
-      box-shadow: 0 1px 8px #1115;
-      border: 2.5px solid transparent;
-      width: 64px;
-      height: 64px;
-      transition: transform 0.13s, box-shadow 0.13s, border-color 0.13s;
-      padding: 0;
-      text-decoration: none;
-    }
-    .socmed-row-center a.wa { border-color: #25D366; }
-    .socmed-row-center a.tg { border-color: #229ED9; }
-    .socmed-row-center a.fb { border-color: #1877F3; }
-    .socmed-row-center a:hover { transform: scale(1.13); box-shadow: 0 6px 18px #FFD60066; }
-    .socmed-row-center svg { width: 38px; height: 38px; display: block; }
-    .chat-container {
-      background: var(--chat-bg);
-      border-radius: 18px;
-      box-shadow: 0 6px 32px 0 #000a;
-      padding: 1.2rem 0 0.7rem 0;
-      width: 98vw;
-      max-width: 420px;
-      min-height: 440px;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 2;
-    }
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0 1.2rem 0.7rem 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-    .bubble {
-      padding: 1rem 1.15rem;
-      border-radius: 1.2rem;
-      font-size: 1.11rem;
-      line-height: 1.7;
-      max-width: 85%;
-      box-shadow: 0 2px 12px 0 #1116;
-      word-break: break-word;
-      display: inline-block;
-      margin-bottom: 0.1rem;
-      border: 2.5px solid transparent;
-      position: relative;
-      padding-right: 2.4rem;
-    }
-    .bubble.user {
-      align-self: flex-end;
-      background: var(--bubble-user);
-      color: #fffde7;
-      border-color: var(--bubble-user-border);
-      border-bottom-right-radius: 0.4rem;
-      margin-left: auto;
-      margin-right: 0.2rem;
-    }
-    .bubble.ai {
-      align-self: flex-start;
-      background: var(--bubble-ai);
-      color: #fffde7;
-      border-color: var(--bubble-ai-border);
-      border-bottom-left-radius: 0.4rem;
-      margin-right: auto;
-      margin-left: 0.2rem;
-    }
-    .ai-label {
-      font-weight: bold;
-      color: #FFD600;
-      margin-right: 0.7em;
-      letter-spacing: 0.5px;
-    }
-    .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      background: none;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding: 2px 2px 2px 2px;
-      border-radius: 6px;
-      transition: background 0.15s;
-      color: #FFD600;
-      z-index: 3;
-      font-size: 1rem;
-    }
-    .copy-btn:hover {
-      background: #fffde7;
-      color: #333;
-    }
-    .typing-indicator {
-      font-style: italic;
-      color: var(--text-light);
-      font-size: 1.05rem;
-      margin-top: 0.2rem;
-      margin-bottom: 0.6rem;
-      padding-left: 0.4rem;
-      display: none;
-    }
-    .typing-indicator.visible {
-      display: block;
-    }
-    .message-input {
-      display: flex;
-      padding: 0.7rem 1rem 0.1rem 1rem;
-      border-top: 2px solid var(--border-color);
-      background: #171717;
-      border-radius: 0 0 14px 14px;
-      position: relative;
-      z-index: 2;
-    }
-    #user-input {
-      flex: 1;
-      padding: 0.7rem 1rem;
-      border: 2px solid var(--primary-yellow);
-      border-radius: 9px;
-      font-size: 1.13rem;
-      background: #191919;
-      color: #fffde7;
-      resize: none;
-      font-family: inherit;
-      min-height: 44px;
-      margin-right: 0.5rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    #user-input:focus {
-      border-color: var(--primary-yellow-dark);
-    }
-    #send-button {
-      padding: 0 1.25rem;
-      background: var(--primary-yellow);
-      color: #212121;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.13rem;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 2px 8px 0 #FFD60033;
-      transition: background 0.2s, color 0.2s;
-    }
-    #send-button:hover {
-      background: var(--primary-yellow-dark);
-      color: #111;
-    }
-    #send-button:disabled {
-      background: #444;
-      color: #333;
-      cursor: not-allowed;
-    }
-    footer {
-      margin-top: 1.7rem;
-      margin-bottom: 59px;
-      text-align: center;
-      font-size: .99rem;
-      color: #FFD600;
-      padding-bottom: 1.3rem;
-      background: var(--footer-bg);
-      border-radius: 0 0 16px 16px;
-      box-shadow: 0 -3px 18px 0 #0008;
-      min-width: 340px;
-      max-width: 420px;
-      width: 100%;
-      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-    }
-    .footer-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      line-height: 1.7;
-      padding-top: 12px;
-      padding-bottom: 8px;
-    }
-    .footer-content .maker {
-      font-weight: bold;
-      letter-spacing: 0.5px;
-    }
-    .footer-content .maker small {
-      font-weight: normal;
-      color: #ffe082;
-    }
-    .footer-content .contacts {
-      font-size: 0.98em;
-      color: #ffe082;
-      margin-top: 2px;
-    }
-    .footer-content .contacts span {
-      margin: 0 6px;
-    }
-    @media (max-width: 600px) {
-      .main-title h1 { font-size: 1.6rem; }
-      .robot-hero .robot-img { width:120px; }
-      .socmed-row-center { gap:1rem;}
-      .socmed-row-center a { width: 42px; height: 42px;}
-      .socmed-row-center svg { width:24px; height:24px;}
-      .chat-container { min-width: unset; max-width: 100vw; }
-      footer { min-width: unset; max-width: 100vw; }
-    }
-  </style>
-</head>
-<body>
-  <div class="robot-hero">
-    <svg class="robot-img" viewBox="0 0 160 160" fill="none">
-      <ellipse cx="80" cy="80" rx="70" ry="70" fill="#FFD600"/>
-      <ellipse cx="80" cy="108" rx="48" ry="22" fill="#FFFDE7" opacity="0.5"/>
-      <rect x="44" y="65" width="72" height="46" rx="23" fill="#333"/>
-      <ellipse cx="65" cy="91" rx="10" ry="12" fill="#FFD600"/>
-      <ellipse cx="95" cy="91" rx="10" ry="12" fill="#FFD600"/>
-      <rect x="76" y="113" width="8" height="9" rx="4" fill="#FFD600"/>
-      <rect x="58" y="132" width="44" height="20" rx="6" fill="#FFFDE7" stroke="#FFD600" stroke-width="3"/>
-      <text x="80" y="146" text-anchor="middle" font-size="10" fill="#333">Pesan Anda</text>
-    </svg>
-  </div>
-  <div class="main-title">
-    <h1>AI DIANA</h1>
-    <div class="sub">Asisten Virtual Modern</div>
-  </div>
-  <div class="socmed-row-center">
-    <a href="https://wa.me/6282173914145" target="_blank" title="WhatsApp Admin" class="wa">
-      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#25D366"/><path d="M23.9 20.3c-.3-.2-1.7-.8-2-1s-.5-.2-.7.1c-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-1.7-.7-3.1-2.3-3.9-3.9-.1-.3 0-.4.1-.6s.3-.4.5-.6c.2-.3.2-.5.1-.7s-.7-1.7-1-2.3c-.2-.4-.5-.4-.7-.4-.2 0-.5 0-.8 0-.4 0-.7.4-.8.8-.5 1.4.1 3.2 1.7 5.1 1.6 2 3.7 3.2 5.2 3.2.6 0 1.2-.2 1.4-.4.2-.2.4-.4.5-.6.1-.2.1-.4 0-.6zm-7.1-12.6C10.2 7.7 7.2 11.1 7.2 15.2c0 2 .8 3.9 2.2 5.3l-1.4 4.2 4.4-1.4c1.3.7 2.7 1.1 4.2 1.1 4.1 0 7.5-3 7.5-6.7 0-3.8-3.4-6.8-7.5-6.8z" fill="#fff"/></svg>
-    </a>
-    <a href="https://t.me/nina_storevip" target="_blank" title="Telegram Admin" class="tg">
-      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#229ED9"/><path d="M24.4 9.6l-2.6 12.3c-.2.9-.8 1.1-1.6.7l-4.5-3.3-2.2 2.1c-.3.3-.5.5-1.1.5l.4-5.3 9.7-8.7c.4-.3-.1-.4-.6-.2L9.7 15.2l-5.1-1.6c-1-.3-1-1 0-1.3l18.2-7c.8-.3 1.5.2 1.2 1.3z" fill="#fff"/></svg>
-    </a>
-    <a href="https://facebook.com/Dedi%20ceo%20sezuki" target="_blank" title="Facebook Admin" class="fb">
-      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#1877F3"/><path d="M21.9 17.1l.5-3.3h-3v-2c0-.9.3-1.7 1.8-1.7h1.3V7.2S20.7 7 19.5 7c-2.3 0-3.7 1.4-3.7 4v2.8h-2.5v3.3h2.5V25h3.1v-7.9h2.1z" fill="#fff"/></svg>
-    </a>
-  </div>
-  <div class="chat-container">
-    <div id="chat-messages" class="chat-messages"></div>
-    <div class="typing-indicator" id="typing-indicator">
-      AI DIANA sedang mengetik...
-    </div>
-    <div class="message-input">
-      <textarea
-        id="user-input"
-        placeholder="Tulis pesan di sini lalu tekan Enter..."
-        rows="1"
-        autofocus
-      ></textarea>
-      <button id="send-button">Kirim</button>
-    </div>
-  </div>
-  <footer>
-    <div class="footer-content">
-      <div class="maker">
-        <span style="font-size:1.08em;letter-spacing:1.5px;">PEMBUAT :</span><br>
-        <span style="font-size:1.22em;font-weight:bold;letter-spacing:2px;display:inline-block;margin-top:2px;color:#FFC400;">NINA KURNIASIH</span>
-      </div>
-      <div class="contacts" style="margin-top:6px;">
-        WhatsApp: <a href="https://wa.me/6282173914145" target="_blank" style="color:#25D366;">0821-7391-4145</a>
-        <span>|</span>
-        Telegram: <a href="https://t.me/nina_storevip" target="_blank" style="color:#229ED9;">@nina_storevip</a>
-        <span>|</span>
-        Facebook: <a href="https://facebook.com/Dedi%20ceo%20sezuki" target="_blank" style="color:#1877F3;">Dedi ceo sezuki</a>
-      </div>
-    </div>
-  </footer>
-  <script>
-    // Chat logic langsung di HTML
-    const chatMessages = document.getElementById('chat-messages');
-    const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-    // Welcome on load
-    window.addEventListener('DOMContentLoaded', function() {
-      chatMessages.innerHTML = '';
-      setTimeout(() => {
-        createBubble("Halo! Ada yang bisa DIANA AI bantu hari ini?", 'ai');
-      }, 500);
-    });
-    function createBubble(text, who = 'user') {
-      const div = document.createElement('div');
-      div.className = 'bubble ' + who;
-      div.innerHTML = (who === 'ai'
-        ? '<span class="ai-label">DIANA AI:</span> ' + text + `<button class="copy-btn" title="Copy"><svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="9" height="10" rx="2" fill="#FFD600" stroke="#333" stroke-width="1.3"/><rect x="7" y="3" width="9" height="10" rx="2" fill="none" stroke="#FFD600" stroke-width="1.5"/></svg></button>`
-        : text);
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    sendButton.onclick = sendMessage;
-    userInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI DIANA</title>
+    <style>
+      :root {
+        --primary-yellow: #FFD600;
+        --primary-yellow-dark: #FFC400;
+        --border-color: #333;
+        --chat-bg: #222;
+        --bubble-user: #424242;
+        --bubble-ai: #282828;
+        --bubble-user-border: #FFD600;
+        --bubble-ai-border: #fffde7;
+        --text-main: #fffde7;
+        --text-light: #bdbdbd;
+        --footer-bg: #181818;
       }
-    });
-    function sendMessage() {
-      const msg = userInput.value.trim();
-      if (!msg) return;
-      createBubble(msg, 'user');
-      userInput.value = '';
-      setTimeout(() => {
-        createBubble('Ini balasan dari <b>DIANA AI</b> untuk: <i>' + msg + '</i>', 'ai');
-      }, 900);
-    }
-    // Copy button
-    function initCopyButtons() {
-      document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.onclick = function(e) {
-          e.stopPropagation();
-          const bubble = btn.closest('.bubble');
-          let text = bubble.innerText.replace("Copy", "").replace("Copied!","");
-          navigator.clipboard.writeText(text.trim());
-          btn.innerHTML = "Copied!";
-          setTimeout(()=>{btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20"><rect x="5" y="7" width="9" height="10" rx="2" fill="#FFD600" stroke="#333" stroke-width="1.3"/><rect x="7" y="3" width="9" height="10" rx="2" fill="none" stroke="#FFD600" stroke-width="1.5"/></svg>` }, 1300)
-        }
-      });
-    }
-    // Monitor bubble baru
-    const observer = new MutationObserver(initCopyButtons);
-    observer.observe(document.getElementById('chat-messages'), {childList: true, subtree: true});
-    initCopyButtons();
-  </script>
-</body>
+      body {
+        background: #111;
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        color: var(--text-main);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .robot-hero {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2.2rem;
+        margin-bottom: 0.4rem;
+      }
+      .robot-hero .robot-img {
+        width: 160px;
+        height: auto;
+      }
+      .main-title {
+        text-align: center;
+        margin-bottom: 0.3rem;
+      }
+      .main-title h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: 2.5px;
+        color: #FFD600;
+        margin: 0;
+        text-shadow: 1px 2px 8px rgba(0,0,0,0.10);
+      }
+      .main-title .sub {
+        font-size: 1.07rem;
+        color: #fffde7cc;
+        margin-top: 0.2rem;
+        margin-bottom: 0.7rem;
+        letter-spacing: 0.5px;
+      }
+      .socmed-row-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2.4rem;
+        margin-bottom: 1.1rem;
+        margin-top: 0.2rem;
+        width: 100%;
+      }
+      .socmed-row-center a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #181818;
+        box-shadow: 0 1px 8px #1115;
+        border: 2.5px solid transparent;
+        width: 64px;
+        height: 64px;
+        transition: transform 0.13s, box-shadow 0.13s, border-color 0.13s;
+        padding: 0;
+        text-decoration: none;
+      }
+      .socmed-row-center a.wa { border-color: #25D366; }
+      .socmed-row-center a.tg { border-color: #229ED9; }
+      .socmed-row-center a.fb { border-color: #1877F3; }
+      .socmed-row-center a:hover { transform: scale(1.13); box-shadow: 0 6px 18px #FFD60066; }
+      .socmed-row-center svg { width: 38px; height: 38px; display: block; }
+      .chat-container {
+        background: var(--chat-bg);
+        border-radius: 18px;
+        box-shadow: 0 6px 32px 0 #000a;
+        padding: 1.2rem 0 0.7rem 0;
+        width: 98vw;
+        max-width: 420px;
+        min-height: 440px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 2;
+      }
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 1.2rem 0.7rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      .bubble {
+        padding: 1rem 1.15rem;
+        border-radius: 1.2rem;
+        font-size: 1.11rem;
+        line-height: 1.7;
+        max-width: 85%;
+        box-shadow: 0 2px 12px 0 #1116;
+        word-break: break-word;
+        display: inline-block;
+        margin-bottom: 0.1rem;
+        border: 2.5px solid transparent;
+        position: relative;
+        padding-right: 2.4rem;
+      }
+      .bubble.user {
+        align-self: flex-end;
+        background: var(--bubble-user);
+        color: #fffde7;
+        border-color: var(--bubble-user-border);
+        border-bottom-right-radius: 0.4rem;
+        margin-left: auto;
+        margin-right: 0.2rem;
+      }
+      .bubble.ai {
+        align-self: flex-start;
+        background: var(--bubble-ai);
+        color: #fffde7;
+        border-color: var(--bubble-ai-border);
+        border-bottom-left-radius: 0.4rem;
+        margin-right: auto;
+        margin-left: 0.2rem;
+      }
+      .ai-label {
+        font-weight: bold;
+        color: #FFD600;
+        margin-right: 0.7em;
+        letter-spacing: 0.5px;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 2px 2px 2px 2px;
+        border-radius: 6px;
+        transition: background 0.15s;
+        color: #FFD600;
+        z-index: 3;
+        font-size: 1rem;
+      }
+      .copy-btn:hover {
+        background: #fffde7;
+        color: #333;
+      }
+      .typing-indicator {
+        font-style: italic;
+        color: var(--text-light);
+        font-size: 1.05rem;
+        margin-top: 0.2rem;
+        margin-bottom: 0.6rem;
+        padding-left: 0.4rem;
+        display: none;
+      }
+      .typing-indicator.visible {
+        display: block;
+      }
+      .message-input {
+        display: flex;
+        padding: 0.7rem 1rem 0.1rem 1rem;
+        border-top: 2px solid var(--border-color);
+        background: #171717;
+        border-radius: 0 0 14px 14px;
+        position: relative;
+        z-index: 2;
+      }
+      #user-input {
+        flex: 1;
+        padding: 0.7rem 1rem;
+        border: 2px solid var(--primary-yellow);
+        border-radius: 9px;
+        font-size: 1.13rem;
+        background: #191919;
+        color: #fffde7;
+        resize: none;
+        font-family: inherit;
+        min-height: 44px;
+        margin-right: 0.5rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      #user-input:focus {
+        border-color: var(--primary-yellow-dark);
+      }
+      #send-button {
+        padding: 0 1.25rem;
+        background: var(--primary-yellow);
+        color: #212121;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.13rem;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 8px 0 #FFD60033;
+        transition: background 0.2s, color 0.2s;
+      }
+      #send-button:hover {
+        background: var(--primary-yellow-dark);
+        color: #111;
+      }
+      #send-button:disabled {
+        background: #444;
+        color: #333;
+        cursor: not-allowed;
+      }
+      footer {
+        margin-top: 1.7rem;
+        margin-bottom: 59px;
+        text-align: center;
+        font-size: .99rem;
+        color: #FFD600;
+        padding-bottom: 1.3rem;
+        background: var(--footer-bg);
+        border-radius: 0 0 16px 16px;
+        box-shadow: 0 -3px 18px 0 #0008;
+        min-width: 340px;
+        max-width: 420px;
+        width: 100%;
+        font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      }
+      .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        line-height: 1.7;
+        padding-top: 12px;
+        padding-bottom: 8px;
+      }
+      .footer-content .maker {
+        font-weight: bold;
+        letter-spacing: 0.5px;
+      }
+      .footer-content .maker small {
+        font-weight: normal;
+        color: #ffe082;
+      }
+      .footer-content .contacts {
+        font-size: 0.98em;
+        color: #ffe082;
+        margin-top: 2px;
+      }
+      .footer-content .contacts span {
+        margin: 0 6px;
+      }
+      @media (max-width: 600px) {
+        .main-title h1 { font-size: 1.6rem; }
+        .robot-hero .robot-img { width:120px; }
+        .socmed-row-center { gap:1rem;}
+        .socmed-row-center a { width: 42px; height: 42px;}
+        .socmed-row-center svg { width:24px; height:24px;}
+        .chat-container { min-width: unset; max-width: 100vw; }
+        footer { min-width: unset; max-width: 100vw; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="robot-hero">
+      <svg class="robot-img" viewBox="0 0 160 160" fill="none">
+        <ellipse cx="80" cy="80" rx="70" ry="70" fill="#FFD600"/>
+        <ellipse cx="80" cy="108" rx="48" ry="22" fill="#FFFDE7" opacity="0.5"/>
+        <rect x="44" y="65" width="72" height="46" rx="23" fill="#333"/>
+        <ellipse cx="65" cy="91" rx="10" ry="12" fill="#FFD600"/>
+        <ellipse cx="95" cy="91" rx="10" ry="12" fill="#FFD600"/>
+        <rect x="76" y="113" width="8" height="9" rx="4" fill="#FFD600"/>
+        <rect x="58" y="132" width="44" height="20" rx="6" fill="#FFFDE7" stroke="#FFD600" stroke-width="3"/>
+        <text x="80" y="146" text-anchor="middle" font-size="10" fill="#333">Pesan Anda</text>
+      </svg>
+    </div>
+    <div class="main-title">
+      <h1>AI DIANA</h1>
+      <div class="sub">Asisten Virtual Modern</div>
+    </div>
+    <div class="socmed-row-center">
+      <a href="https://wa.me/6282173914145" target="_blank" title="WhatsApp Admin" class="wa">
+        <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#25D366"/><path d="M23.9 20.3c-.3-.2-1.7-.8-2-1s-.5-.2-.7.1c-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-1.7-.7-3.1-2.3-3.9-3.9-.1-.3 0-.4.1-.6s.3-.4.5-.6c.2-.3.2-.5.1-.7s-.7-1.7-1-2.3c-.2-.4-.5-.4-.7-.4-.2 0-.5 0-.8 0-.4 0-.7.4-.8.8-.5 1.4.1 3.2 1.7 5.1 1.6 2 3.7 3.2 5.2 3.2.6 0 1.2-.2 1.4-.4.2-.2.4-.4.5-.6.1-.2.1-.4 0-.6zm-7.1-12.6C10.2 7.7 7.2 11.1 7.2 15.2c0 2 .8 3.9 2.2 5.3l-1.4 4.2 4.4-1.4c1.3.7 2.7 1.1 4.2 1.1 4.1 0 7.5-3 7.5-6.7 0-3.8-3.4-6.8-7.5-6.8z" fill="#fff"/></svg>
+      </a>
+      <a href="https://t.me/nina_storevip" target="_blank" title="Telegram Admin" class="tg">
+        <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#229ED9"/><path d="M24.4 9.6l-2.6 12.3c-.2.9-.8 1.1-1.6.7l-4.5-3.3-2.2 2.1c-.3.3-.5.5-1.1.5l.4-5.3 9.7-8.7c.4-.3-.1-.4-.6-.2L9.7 15.2l-5.1-1.6c-1-.3-1-1 0-1.3l18.2-7c.8-.3 1.5.2 1.2 1.3z" fill="#fff"/></svg>
+      </a>
+      <a href="https://facebook.com/Dedi%20ceo%20sezuki" target="_blank" title="Facebook Admin" class="fb">
+        <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#1877F3"/><path d="M21.9 17.1l.5-3.3h-3v-2c0-.9.3-1.7 1.8-1.7h1.3V7.2S20.7 7 19.5 7c-2.3 0-3.7 1.4-3.7 4v2.8h-2.5v3.3h2.5V25h3.1v-7.9h2.1z" fill="#fff"/></svg>
+      </a>
+    </div>
+    <div class="chat-container">
+      <div id="chat-messages" class="chat-messages"></div>
+      <div class="typing-indicator" id="typing-indicator">
+        AI DIANA sedang mengetik...
+      </div>
+      <div class="message-input">
+        <textarea
+          id="user-input"
+          placeholder="Tulis pesan di sini lalu tekan Enter..."
+          rows="1"
+          autofocus
+        ></textarea>
+        <button id="send-button">Kirim</button>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-content">
+        <div class="maker">
+          <span style="font-size:1.08em;letter-spacing:1.5px;">PEMBUAT :</span><br>
+          <span style="font-size:1.22em;font-weight:bold;letter-spacing:2px;display:inline-block;margin-top:2px;color:#FFC400;">NINA KURNIASIH</span>
+        </div>
+        <div class="contacts" style="margin-top:6px;">
+          WhatsApp: <a href="https://wa.me/6282173914145" target="_blank" style="color:#25D366;">0821-7391-4145</a>
+          <span>|</span>
+          Telegram: <a href="https://t.me/nina_storevip" target="_blank" style="color:#229ED9;">@nina_storevip</a>
+          <span>|</span>
+          Facebook: <a href="https://facebook.com/Dedi%20ceo%20sezuki" target="_blank" style="color:#1877F3;">Dedi ceo sezuki</a>
+        </div>
+      </div>
+    </footer>
+    <!-- AI/chat logic TETAP dari chat.js milikmu, tidak diubah/copas ulang di sini -->
+    <script src="chat.js"></script>
+  </body>
 </html>
